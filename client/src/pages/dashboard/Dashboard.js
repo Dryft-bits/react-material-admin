@@ -323,20 +323,21 @@ const Dashboard = ({
                   <div className={classes.mainChartHeaderLabel}>
                     <Dot color="primary" />
                     <Typography className={classes.mainChartLegentElement}>
-                      Students
+                      All
                     </Typography>
                   </div>
                   <div className={classes.mainChartHeaderLabel}>
-                    <Dot color="warning" />
+                    <Dot color="secondary" />
                     <Typography className={classes.mainChartLegentElement}>
                       Unique
                     </Typography>
                   </div>
                 </div>
                 <Select
+                  style={{ width: "10vw" }}
                   value={mainChartState}
                   onChange={e => {
-                    console.log(parseInt(e.target.value));
+                    setMainChartState(e.target.value);
                     getDataForPeriod(
                       allData.userLogins,
                       parseInt(e.target.value),
@@ -361,7 +362,7 @@ const Dashboard = ({
             }
           >
             <ResponsiveContainer width="100%" minWidth={500} height={350}>
-              <ComposedChart
+              <AreaChart
                 margin={{ top: 0, right: -15, left: -15, bottom: 0 }}
                 data={loginData}
               >
@@ -383,26 +384,23 @@ const Dashboard = ({
                   stroke={theme.palette.text.hint + "80"}
                   tickLine={false}
                 />
-                <Line
+                <Area
                   type="linear"
                   dataKey="allUsers"
                   stroke={theme.palette.primary.main}
+                  fill={theme.palette.primary.light}
                   strokeWidth={2}
-                  dot={false}
-                  activeDot={false}
+                  fillOpacity="0.25"
                 />
-                <Line
+                <Area
                   type="linear"
                   dataKey="uniqueUsers"
-                  stroke={theme.palette.warning.main}
+                  stroke={theme.palette.secondary.main}
+                  fill={theme.palette.secondary.light}
                   strokeWidth={2}
-                  dot={{
-                    stroke: theme.palette.warning.dark,
-                    strokeWidth: 2,
-                    fill: theme.palette.warning.main,
-                  }}
+                  fillOpacity="0.25"
                 />
-              </ComposedChart>
+              </AreaChart>
             </ResponsiveContainer>
           </Widget>
         </Grid>

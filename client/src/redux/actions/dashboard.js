@@ -7,8 +7,7 @@ import {
   LOGIN_INFO_FAIL,
 } from "../types";
 
-var CURRENT_DATE = moment(); // fixed just for testing, use moment();
-
+// Initial redux action for loading data
 export const getDashboardData = () => async dispatch => {
   try {
     await axios.get("/api/dashboard").then(res => {
@@ -29,10 +28,13 @@ export const getDashboardData = () => async dispatch => {
   }
 };
 
+// Action to get data for certain period
 export const getDataForPeriod = (logins, days = 30) => async dispatch => {
-  console.log("hi");
+  const CURRENT_TIME = moment();
+  days--; // For array index
   try {
     var loginData = [];
+    // Initialize data in format needed by dashboard
     for (let day = days; day >= 0; day--) {
       loginData.push({
         allUsers: 0,
@@ -40,32 +42,40 @@ export const getDataForPeriod = (logins, days = 30) => async dispatch => {
       });
     }
 
+    // Count all logins for each day
     logins.forEach(login => {
-      loginData[days - CURRENT_DATE.diff(login["createdAt"], "days")][
-        "allUsers"
-      ] += 1;
+      const difference = days - CURRENT_TIME.diff(login["createdAt"], "days");
+      if (difference >= 0) {
+        loginData[difference]["allUsers"] += 1;
+      }
     });
 
+    // Data assumed to be in sorted order, and will be, with very small variations, if at all due to network speeds
     var currentDay = days;
     var uniqueLoginsForDay = new Set();
     for (var loginIdx = 0; loginIdx < logins.length; loginIdx++) {
       const currentLogin = logins[loginIdx];
-      if (CURRENT_DATE.diff(currentLogin["createdAt"], "days") === currentDay) {
+      if (CURRENT_TIME.diff(currentLogin["createdAt"], "days") === currentDay) {
         uniqueLoginsForDay.add(currentLogin["userId"]["_id"]);
       } else {
-        loginData[days - currentDay]["uniqueUsers"] = uniqueLoginsForDay.size;
+        if (days - currentDay > 0) {
+          loginData[days - currentDay]["uniqueUsers"] = uniqueLoginsForDay.size;
+        }
         uniqueLoginsForDay = new Set();
         uniqueLoginsForDay.add(currentLogin["userId"]["_id"]);
-        currentDay = CURRENT_DATE.diff(currentLogin["createdAt"], "days");
+        currentDay = CURRENT_TIME.diff(currentLogin["createdAt"], "days");
       }
     }
-    loginData[days - currentDay]["uniqueUsers"] = uniqueLoginsForDay.size;
+    if (days - currentDay > 0) {
+      loginData[days - currentDay]["uniqueUsers"] = uniqueLoginsForDay.size;
+    }
 
     dispatch({
       type: LOGIN_INFO_SUCCESS,
       payload: { loginData: loginData },
     });
   } catch (err) {
+    console.log(err);
     dispatch({
       type: LOGIN_INFO_FAIL,
     });
