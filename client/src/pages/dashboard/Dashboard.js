@@ -33,6 +33,8 @@ import Dot from "../../components/Sidebar/components/Dot";
 import Table from "./components/Table/Table";
 import BigStat from "./components/BigStat/BigStat";
 
+import axios from "axios";
+
 const mainChartData = getMainChartData();
 const PieChartData = [
   { name: "Group A", value: 400, color: "primary" },
@@ -47,6 +49,14 @@ export default function Dashboard(props) {
 
   // local
   var [mainChartState, setMainChartState] = useState("monthly");
+
+  try {
+    axios.get("/api/dashboard").then(res => {
+      console.log(res);
+    });
+  } catch (err) {
+    window.alert("omg lol");
+  }
 
   return (
     <>

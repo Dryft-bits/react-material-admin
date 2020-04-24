@@ -7,6 +7,8 @@
     "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.3.0",
     "apexcharts": "^3.8.3",
+    "axios": "^0.19.2",
+    "axios-react": "^1.1.4",
     "classnames": "^2.2.6",
     "font-awesome": "^4.7.0",
     "mui-datatables": "^2.6.4",
@@ -22,7 +24,7 @@
     "tinycolor2": "^1.4.1"
   },
   "scripts": {
-    "start": "PORT=3003 react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -44,5 +46,6 @@
   },
   "devDependencies": {
     "prettier": "^1.19.1"
-  }
+  },
+  "proxy": "http://localhost:5001"
 }
