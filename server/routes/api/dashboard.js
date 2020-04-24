@@ -9,7 +9,28 @@ const mscBranches = ["BIO", "CHEM", "ECO", "MATH", "PHY"];
 router.get("/", [], async (req, res) => {
   try {
     let nLogins = await Login.countDocuments();
-    let userLogins = await Login.find({}, "-_id -__v");
+    let userLogins = await Login.find({}, "-__v").populate(
+      "userId",
+      "branch year"
+    );
+    userLogins = userLogins.map(function (login) {
+      // null check
+      if (login.userId) {
+        let branches = login.userId.branch;
+
+        if (branches.length == 2) {
+          if (mscBranches.includes(branches[0])) {
+            login.userId.branch = branches[0];
+          } else if (mscBranches.includes(branches[1])) {
+            login.userId.branch = branches[1];
+          } else {
+            login.userId.branch = branches[0];
+          }
+        }
+      }
+      return login;
+    });
+
     let nUniqueLogins = (await Login.find().distinct("userId")).length;
     let timetablesCreated = await TimeTable.find({}, "date").populate(
       "ownerId",
@@ -22,11 +43,11 @@ router.get("/", [], async (req, res) => {
 
         if (branches.length == 2) {
           if (mscBranches.includes(branches[0])) {
-            tt.ownerId.branch = [branches[0]];
+            tt.ownerId.branch = branches[0];
           } else if (mscBranches.includes(branches[1])) {
-            tt.ownerId.branch = [branches[1]];
+            tt.ownerId.branch = branches[1];
           } else {
-            tt.ownerId.branch = [branches[0]];
+            tt.ownerId.branch = branches[0];
           }
         }
       }

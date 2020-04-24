@@ -1,4 +1,5 @@
 import React from "react";
+import { Provider } from "react-redux";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // components
@@ -11,24 +12,33 @@ import Login from "../pages/login";
 // context
 import { useUserState } from "../context/UserContext";
 
+// Redux
+import store from "../redux/store";
+
 export default function App() {
   // global
   var { isAuthenticated } = useUserState();
 
   return (
-    <HashRouter>
-      <Switch>
-        <Route exact path="/" render={() => <Redirect to="/app/dashboard" />} />
-        <Route
-          exact
-          path="/app"
-          render={() => <Redirect to="/app/dashboard" />}
-        />
-        <PrivateRoute path="/app" component={Layout} />
-        <PublicRoute path="/login" component={Login} />
-        <Route component={Error} />
-      </Switch>
-    </HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => <Redirect to="/app/dashboard" />}
+          />
+          <Route
+            exact
+            path="/app"
+            render={() => <Redirect to="/app/dashboard" />}
+          />
+          <PrivateRoute path="/app" component={Layout} />
+          <PublicRoute path="/login" component={Login} />
+          <Route component={Error} />
+        </Switch>
+      </HashRouter>
+    </Provider>
   );
 
   // #######################################################################
