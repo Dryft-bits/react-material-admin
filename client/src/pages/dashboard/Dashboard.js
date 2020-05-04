@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import {
   Grid,
   LinearProgress,
@@ -33,7 +34,12 @@ import Dot from "../../components/Sidebar/components/Dot";
 import Table from "./components/Table/Table";
 import BigStat from "./components/BigStat/BigStat";
 
-const mainChartData = getMainChartData();
+import {
+  getDashboardData,
+  getDataForPeriod,
+} from "../../redux/actions/dashboard";
+
+// const mainChartData = getMainChartData();
 const PieChartData = [
   { name: "Group A", value: 400, color: "primary" },
   { name: "Group B", value: 300, color: "secondary" },
@@ -41,12 +47,21 @@ const PieChartData = [
   { name: "Group D", value: 200, color: "success" },
 ];
 
-export default function Dashboard(props) {
+const Dashboard = ({
+  y_max,
+  allData,
+  loginData,
+  getDashboardData,
+  getDataForPeriod,
+}) => {
+  useEffect(() => {
+    getDashboardData();
+  }, [getDashboardData]);
   var classes = useStyles();
   var theme = useTheme();
 
   // local
-  var [mainChartState, setMainChartState] = useState("monthly");
+  var [mainChartState, setMainChartState] = useState("30");
 
   return (
     <>
@@ -302,31 +317,32 @@ export default function Dashboard(props) {
                   color="text"
                   colorBrightness="secondary"
                 >
-                  Daily Line Chart
+                  Number of students
                 </Typography>
                 <div className={classes.mainChartHeaderLabels}>
                   <div className={classes.mainChartHeaderLabel}>
-                    <Dot color="warning" />
+                    <Dot color="primary" />
                     <Typography className={classes.mainChartLegentElement}>
-                      Tablet
+                      All
                     </Typography>
                   </div>
                   <div className={classes.mainChartHeaderLabel}>
-                    <Dot color="primary" />
+                    <Dot color="secondary" />
                     <Typography className={classes.mainChartLegentElement}>
-                      Mobile
-                    </Typography>
-                  </div>
-                  <div className={classes.mainChartHeaderLabel}>
-                    <Dot color="primary" />
-                    <Typography className={classes.mainChartLegentElement}>
-                      Desktop
+                      Unique
                     </Typography>
                   </div>
                 </div>
                 <Select
+                  style={{ width: "10vw" }}
                   value={mainChartState}
-                  onChange={e => setMainChartState(e.target.value)}
+                  onChange={e => {
+                    setMainChartState(e.target.value);
+                    getDataForPeriod(
+                      allData.userLogins,
+                      parseInt(e.target.value),
+                    );
+                  }}
                   input={
                     <OutlinedInput
                       labelWidth={0}
@@ -338,20 +354,26 @@ export default function Dashboard(props) {
                   }
                   autoWidth
                 >
-                  <MenuItem value="daily">Daily</MenuItem>
-                  <MenuItem value="weekly">Weekly</MenuItem>
-                  <MenuItem value="monthly">Monthly</MenuItem>
+                  <MenuItem value="7">7 days</MenuItem>
+                  <MenuItem value="30">30 days</MenuItem>
+                  <MenuItem value="180">180 days</MenuItem>
                 </Select>
               </div>
             }
           >
             <ResponsiveContainer width="100%" minWidth={500} height={350}>
-              <ComposedChart
+              <AreaChart
                 margin={{ top: 0, right: -15, left: -15, bottom: 0 }}
-                data={mainChartData}
+                data={loginData}
               >
                 <YAxis
-                  ticks={[0, 2500, 5000, 7500]}
+                  ticks={[
+                    y_max / 5,
+                    (2 * y_max) / 5,
+                    (3 * y_max) / 5,
+                    (4 * y_max) / 5,
+                    y_max,
+                  ]}
                   tick={{ fill: theme.palette.text.hint + "80", fontSize: 14 }}
                   stroke={theme.palette.text.hint + "80"}
                   tickLine={false}
@@ -363,32 +385,22 @@ export default function Dashboard(props) {
                   tickLine={false}
                 />
                 <Area
-                  type="natural"
-                  dataKey="desktop"
-                  fill={theme.palette.background.light}
-                  strokeWidth={0}
-                  activeDot={false}
-                />
-                <Line
-                  type="natural"
-                  dataKey="mobile"
-                  stroke={theme.palette.primary.main}
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={false}
-                />
-                <Line
                   type="linear"
-                  dataKey="tablet"
-                  stroke={theme.palette.warning.main}
+                  dataKey="allUsers"
+                  stroke={theme.palette.primary.main}
+                  fill={theme.palette.primary.light}
                   strokeWidth={2}
-                  dot={{
-                    stroke: theme.palette.warning.dark,
-                    strokeWidth: 2,
-                    fill: theme.palette.warning.main,
-                  }}
+                  fillOpacity="0.25"
                 />
-              </ComposedChart>
+                <Area
+                  type="linear"
+                  dataKey="uniqueUsers"
+                  stroke={theme.palette.secondary.main}
+                  fill={theme.palette.secondary.light}
+                  strokeWidth={2}
+                  fillOpacity="0.25"
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </Widget>
         </Grid>
@@ -410,7 +422,7 @@ export default function Dashboard(props) {
       </Grid>
     </>
   );
-}
+};
 
 // #######################################################################
 function getRandomData(length, min, max, multiplier = 10, maxDiff = 10) {
@@ -434,19 +446,19 @@ function getRandomData(length, min, max, multiplier = 10, maxDiff = 10) {
   });
 }
 
-function getMainChartData() {
-  var resultArray = [];
-  var tablet = getRandomData(31, 3500, 6500, 7500, 1000);
-  var desktop = getRandomData(31, 1500, 7500, 7500, 1500);
-  var mobile = getRandomData(31, 1500, 7500, 7500, 1500);
+const mapStateToProps = state => {
+  return {
+    allData: state.dashboard.allData,
+    loginData: state.dashboard.loginData,
+    y_max: Math.max.apply(
+      Math,
+      state.dashboard.loginData.map(function(o) {
+        return o.allUsers;
+      }),
+    ),
+  };
+};
 
-  for (let i = 0; i < tablet.length; i++) {
-    resultArray.push({
-      tablet: tablet[i].value,
-      desktop: desktop[i].value,
-      mobile: mobile[i].value,
-    });
-  }
-
-  return resultArray;
-}
+export default connect(mapStateToProps, { getDashboardData, getDataForPeriod })(
+  Dashboard,
+);
