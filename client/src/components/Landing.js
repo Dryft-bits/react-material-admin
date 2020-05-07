@@ -10,15 +10,15 @@ import Error from "../pages/error";
 import Login from "../pages/login";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import {useGetData} from "use-axios-react";
-const Landing = ({verifyLogin,user}) => {
+import { useGetData } from "use-axios-react";
+const Landing = ({ addProf, user }) => {
     // global
     //var { isAuthenticated } = store.user;
     let token = Cookies.get("token") ? Cookies.get("token") : null;
-    useEffect( () => verifyLogin(token), [verifyLogin,token]);
+    useEffect(() => { addProf(token) }, [addProf, token]);
     console.log(user);
     const [userInfo, loading] = useGetData("/api/profAuth/profLoggedIn");
-    if(loading){
+    if (loading) {
         console.log("u");
         return <h2>Loading</h2>
     }
@@ -35,8 +35,8 @@ const Landing = ({verifyLogin,user}) => {
                     path="/app"
                     render={() => <Redirect to="/app/dashboard" />}
                 />
-                <PrivateRoute path="/app" component={Layout} user={user}/>
-                <PublicRoute path="/login" component={Login} user={user}/>
+                <PrivateRoute path="/app" component={Layout} user={user} />
+                <PublicRoute path="/login" component={Login} user={user} />
                 <Route component={Error} />
             </Switch>
         </HashRouter>
@@ -44,7 +44,7 @@ const Landing = ({verifyLogin,user}) => {
 
     // #######################################################################
 
-    function PrivateRoute({ component: Component,user, ...rest }) {
+    function PrivateRoute({ component: Component, user, ...rest }) {
         return (
             <Route
                 {...rest}
@@ -66,7 +66,7 @@ const Landing = ({verifyLogin,user}) => {
         );
     }
 
-    function PublicRoute({ component: Component,user, ...rest }) {
+    function PublicRoute({ component: Component, user, ...rest }) {
         return (
             <Route
                 {...rest}
@@ -91,9 +91,9 @@ const mapStateToProps = state => {
         user: state.auth.user
     }
 }
-const mapDispatchToProps = () => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        verifyLogin: (token) => addProf(token)
+        addProf: (token) => dispatch(addProf(token))
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Landing);
+export default connect(mapStateToProps, { addProf })(Landing);
