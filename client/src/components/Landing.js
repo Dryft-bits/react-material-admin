@@ -23,7 +23,6 @@ const Landing = ({verifyLogin,user}) => {
         return <h2>Loading</h2>
     }
     return (
-        user?
         <HashRouter>
             <Switch>
                 <Route
@@ -40,7 +39,7 @@ const Landing = ({verifyLogin,user}) => {
                 <PublicRoute path="/login" component={Login} user={user}/>
                 <Route component={Error} />
             </Switch>
-        </HashRouter>:<h1>Loading</h1>
+        </HashRouter>
     );
 
     // #######################################################################
