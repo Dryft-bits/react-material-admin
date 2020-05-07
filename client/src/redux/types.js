@@ -2,3 +2,6 @@ export const DASHDATA_SUCCESS = "DASHDATA_SUCCESS";
 export const DASHDATA_FAIL = "DASHDATA_FAIL";
 export const LOGIN_INFO_SUCCESS = "LOGIN_INFO_SUCCESS";
 export const LOGIN_INFO_FAIL = "LOGIN_INFO_FAIL";
+export const PROF_LOADED = "PROF_LOADED";
+export const NO_PROF = "NO_PROF";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";

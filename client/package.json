@@ -11,6 +11,7 @@
     "axios-react": "^1.1.4",
     "classnames": "^2.2.6",
     "font-awesome": "^4.7.0",
+    "js-cookie": "^2.2.1",
     "moment": "^2.24.0",
     "mui-datatables": "^2.6.4",
     "react": "^16.8.6",
@@ -26,7 +27,8 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "use-axios-react": "^0.2.3"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",

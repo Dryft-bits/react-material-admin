@@ -1,12 +1,13 @@
 const express = require("express");
-const connectDB = require("./config/db.js");
+const connectDB = require("./server/config/db.js");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const path = require("path");
-const dashboardRoute = require("./routes/api/dashboard.js");
+const dashboardRoute = require("./server/routes/api/dashboard.js");
+const profAuthRoute = require("./server/routes/api/profAuth.js");
 
-const configuration = require("./config/constants.js");
+const configuration = require("./server/config/constants.js");
 
 /* Express setup */
 const app = express();
@@ -18,14 +19,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 /* Connect to database */
-const Student = require("./models/Student.js");
+const Student = require("./server/models/Student.js");
 if (process.env.NODE_ENV !== "test") {
   connectDB();
 }
 
 /* Define Routes */
 app.use("/api/dashboard", dashboardRoute);
-
+app.use("/api/profAuth", profAuthRoute);
 /* Heroku */
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
