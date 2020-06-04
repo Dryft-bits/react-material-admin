@@ -11,6 +11,8 @@ import Login from "../pages/login";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useGetData } from "use-axios-react";
+
+import configuration from "../config/constants";
 const Landing = ({ addProf, user }) => {
     // global
     //var { isAuthenticated } = store.user;
@@ -52,14 +54,10 @@ const Landing = ({ addProf, user }) => {
                     user ? (
                         React.createElement(Component, props)
                     ) : (
-                            <Redirect
-                                to={{
-                                    pathname: "/login",
-                                    state: {
-                                        from: props.location,
-                                    },
-                                }}
-                            />
+                        <Route path='/' component={() => {
+                            window.location.href = configuration.urls.studentLogin;
+                            return null;
+                          }} />
                         )
                 }
             />
@@ -91,9 +89,5 @@ const mapStateToProps = state => {
         user: state.auth.user
     }
 }
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addProf: (token) => dispatch(addProf(token))
-    }
-}
+
 export default connect(mapStateToProps, { addProf })(Landing);
