@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {connect} from 'react-redux'
 import {
   AppBar,
   Toolbar,
@@ -34,8 +35,8 @@ import {
   useLayoutDispatch,
   toggleSidebar,
 } from "../../context/LayoutContext";
-import { useUserDispatch, signOut } from "../../context/UserContext";
-
+import { useUserDispatch } from "../../context/UserContext";
+import { logoutProf } from "../../redux/actions/auth"
 const messages = [
   {
     id: 0,
@@ -89,7 +90,7 @@ const notifications = [
   },
 ];
 
-export default function Header(props) {
+const Header = ({logoutProf}) => {
   var classes = useStyles();
 
   // global
@@ -328,7 +329,8 @@ export default function Header(props) {
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() => signOut(userDispatch, props.history)}
+              onClick={() =>{ console.log("Clicked"); logoutProf();
+              }}
             >
               Sign Out
             </Typography>
@@ -338,3 +340,5 @@ export default function Header(props) {
     </AppBar>
   );
 }
+
+export default connect(null, { logoutProf })(Header);
