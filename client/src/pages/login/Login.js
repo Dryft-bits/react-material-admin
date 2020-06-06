@@ -1,255 +1,194 @@
-import React, { useState } from "react";
-import {
-  Grid,
-  CircularProgress,
-  Typography,
-  Button,
-  Tabs,
-  Tab,
-  TextField,
-  Fade,
-} from "@material-ui/core";
-import { withRouter } from "react-router-dom";
-import classnames from "classnames";
+import React from "react";
+import "./Landing.css";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import { useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { addProf } from "../../redux/actions/auth";
+import CreateAccount from "./CreateAccount";
+import { Route } from 'react-router-dom';
+export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
+  let token = Cookies.get("token") ? Cookies.get("token") : null;
 
-// styles
-import useStyles from "./styles";
+  addProf(token);
 
-// logo
-import logo from "./logo.svg";
-import google from "../../images/google.svg";
+  const [open, setOpen] = useState({
+    isOpen: true,
+    username: "",
+    password: "",
+    incorrectUsername: false,
+    incorrectPassword: false,
+    isCreate: false
+  });
+  const {
+    isOpen,
+    username,
+    password,
+    incorrectUsername,
+    incorrectPassword,
+    isCreate
+  } = open;
+  const handleCreate = () => {
+    setOpen({
+      ...open,
+      isCreate: !isCreate
+    });
+  };
+  const handleClickOpen = () => {
+    setOpen({ ...open, isOpen: true });
+  };
 
-// context
-import { useUserDispatch, loginUser } from "../../context/UserContext";
+  /*
+  const handleClose = () => {
+    setOpen({ ...open, isOpen: false });
+  };
+  */
+  const editUsername = e => {
+    e.preventDefault();
+    setOpen({
+      ...open,
+      username: e.target.value,
+      incorrectUsername: false
+    });
+  };
+  const editPassword = e => {
+    e.preventDefault();
+    setOpen({
+      ...open,
+      password: e.target.value,
+      incorrectPassword: false
+    });
+  };
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  };
+  const submit = async e => {
+    let iu = false,
+      ip = false;
+    e.preventDefault();
+    await axios
+      .post(
+        "/api/ProfAuth",
+        {
+          username: username,
+          password: password
+        },
+        config
+      )
+      .then(function (res) {
+        if (!res || res.status === 204) {
+          iu = true;
+        } else {
+          iu = false;
+          if (res.status === 206) {
+            ip = true;
+          } else {
+            ip = false;
+            //store the token in HTTP cookie
+            Cookies.set("token", res.data.token, { expires: 1 });
+            addProf(res.data.token);
+          }
+        }
+        setOpen({
+          ...open,
+          incorrectUsername: iu,
+          incorrectPassword: ip
+        });
+      })
+      .catch(err => {
+        console.log("Axios Error:", err);
+      });
+  };
 
-function Login(props) {
-  var classes = useStyles();
+  if (profAuthenticated) {
+    //redirect to dash here
+    return <Redirect to='/'></Redirect>
+  }
 
-  // global
-  var userDispatch = useUserDispatch();
-
-  // local
-  var [isLoading, setIsLoading] = useState(false);
-  var [error, setError] = useState(null);
-  var [activeTabId, setActiveTabId] = useState(0);
-  var [nameValue, setNameValue] = useState("");
-  var [loginValue, setLoginValue] = useState("");
-  var [passwordValue, setPasswordValue] = useState("");
+  if (isAuthenticated) {
+    return <Redirect to='/checkloggedin'></Redirect>;
+  }
 
   return (
-    <Grid container className={classes.container}>
-      <div className={classes.logotypeContainer}>
-        <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>Material Admin</Typography>
-      </div>
-      <div className={classes.formContainer}>
-        <div className={classes.form}>
-          <Tabs
-            value={activeTabId}
-            onChange={(e, id) => setActiveTabId(id)}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            <Tab label="Login" classes={{ root: classes.tab }} />
-            <Tab label="New User" classes={{ root: classes.tab }} />
-          </Tabs>
-          {activeTabId === 0 && (
-            <React.Fragment>
-              <Typography variant="h1" className={classes.greeting}>
-                Good Morning, User
-              </Typography>
-              <Button size="large" className={classes.googleButton}>
-                <img src={google} alt="google" className={classes.googleIcon} />
-                &nbsp;Sign in with Google
-              </Button>
-              <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
-                <div className={classes.formDivider} />
-              </div>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
-              <TextField
-                id="email"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={loginValue}
-                onChange={e => setLoginValue(e.target.value)}
-                margin="normal"
-                placeholder="Email Adress"
-                type="email"
-                fullWidth
-              />
-              <TextField
-                id="password"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={passwordValue}
-                onChange={e => setPasswordValue(e.target.value)}
-                margin="normal"
-                placeholder="Password"
-                type="password"
-                fullWidth
-              />
-              <div className={classes.formButtons}>
-                {isLoading ? (
-                  <CircularProgress size={26} className={classes.loginLoader} />
-                ) : (
-                  <Button
-                    disabled={
-                      loginValue.length === 0 || passwordValue.length === 0
-                    }
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
-                    }
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                  >
-                    Login
-                  </Button>
-                )}
-                <Button
-                  color="primary"
-                  size="large"
-                  className={classes.forgetButton}
-                >
-                  Forget Password
-                </Button>
-              </div>
-            </React.Fragment>
-          )}
-          {activeTabId === 1 && (
-            <React.Fragment>
-              <Typography variant="h1" className={classes.greeting}>
-                Welcome!
-              </Typography>
-              <Typography variant="h2" className={classes.subGreeting}>
-                Create your account
-              </Typography>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
-              <TextField
-                id="name"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={nameValue}
-                onChange={e => setNameValue(e.target.value)}
-                margin="normal"
-                placeholder="Full Name"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                id="email"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={loginValue}
-                onChange={e => setLoginValue(e.target.value)}
-                margin="normal"
-                placeholder="Email Adress"
-                type="email"
-                fullWidth
-              />
-              <TextField
-                id="password"
-                InputProps={{
-                  classes: {
-                    underline: classes.textFieldUnderline,
-                    input: classes.textField,
-                  },
-                }}
-                value={passwordValue}
-                onChange={e => setPasswordValue(e.target.value)}
-                margin="normal"
-                placeholder="Password"
-                type="password"
-                fullWidth
-              />
-              <div className={classes.creatingButtonContainer}>
-                {isLoading ? (
-                  <CircularProgress size={26} />
-                ) : (
-                  <Button
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
-                    }
-                    disabled={
-                      loginValue.length === 0 ||
-                      passwordValue.length === 0 ||
-                      nameValue.length === 0
-                    }
-                    size="large"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    className={classes.createAccountButton}
-                  >
-                    Create your account
-                  </Button>
-                )}
-              </div>
-              <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
-                <div className={classes.formDivider} />
-              </div>
-              <Button
-                size="large"
-                className={classnames(
-                  classes.googleButton,
-                  classes.googleButtonCreating,
-                )}
-              >
-                <img src={google} alt="google" className={classes.googleIcon} />
-                &nbsp;Sign in with Google
-              </Button>
-            </React.Fragment>
-          )}
+    <section className='landing body'>
+      <div className='dark-overlay'>
+        <div className='landing-inner'>
+          <div className='main'>
+          </div>
         </div>
-        <Typography color="primary" className={classes.copyright}>
-          © 2014-2019 Flatlogic, LLC. All rights reserved.
-        </Typography>
       </div>
-    </Grid>
-  );
-}
+      <div>
+        <Dialog
+          open={isOpen}
+          /*onClose={handleClose}*/
+          aria-labelledby='form-dialog-title'
+        >
+          <form onSubmit={submit}>
+            <DialogTitle id='form-dialog-title'>Staff Login</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Enter your username and password
+              </DialogContentText>
+              <TextField
+                autoFocus
+                error={incorrectUsername}
+                margin='dense'
+                id='name'
+                label='Username'
+                type='text'
+                fullWidth
+                onChange={editUsername}
+                helperText={incorrectUsername ? "Username does not exist" : ""}
+              />
+              <TextField
+                error={incorrectPassword}
+                autoFocus
+                margin='dense'
+                id='name'
+                label='Password'
+                type='password'
+                fullWidth
+                onChange={editPassword}
+                helpertext={
+                  incorrectPassword
+                    ? "Incorrect Password for given username"
+                    : ""
+                }
+              />
+            </DialogContent>
 
-export default withRouter(Login);
+            <DialogActions>
+              <Button type='submit' color='primary'>
+                Login
+              </Button>
+              <Button onClick={handleCreate} color='primary'>
+                Create new
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+        <CreateAccount open={isCreate} action={handleCreate} />
+      </div>
+    </section>
+  );
+};
+
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    profAuthenticated: state.auth.profAuthenticated
+  };
+};
+
+export default connect(mapStateToProps, { addProf })(Landing);
