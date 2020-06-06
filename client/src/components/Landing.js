@@ -54,10 +54,14 @@ const Landing = ({ addProf, user }) => {
                     user ? (
                         React.createElement(Component, props)
                     ) : (
-                        <Route path='/' component={() => {
-                            window.location.href = configuration.urls.studentLogin;
-                            return null;
-                          }} />
+                            <Redirect
+                                to={{
+                                    pathname: "/login",
+                                    state: {
+                                        from: props.location,
+                                    },
+                                }}
+                            />
                         )
                 }
             />
