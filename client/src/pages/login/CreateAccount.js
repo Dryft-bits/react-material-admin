@@ -13,9 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
-import { addProf } from "../../redux/actions/auth";
 import Cookies from "js-cookie";
-import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom';
 const depts = [
     "Biological Sciences",
@@ -31,13 +29,7 @@ const depts = [
     "Pharmacy",
     "Physics",
 ];
-const CreateAccount = (props, { addProf }) => {
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-        }
-    };
+const CreateAccount = (props) => {
     const [open, setOpen] = useState({
         username: "",
         password: "",
@@ -192,7 +184,6 @@ const CreateAccount = (props, { addProf }) => {
                             .then(function (res) {
                                 //store the token in HTTP cookie
                                 Cookies.set("token", res.data.token, { expires: 1 });
-                                addProf(res.data.token);
                                 pa = true;
                             })
                             .catch(err => {
@@ -220,11 +211,7 @@ const CreateAccount = (props, { addProf }) => {
             })
         }
     }
-    if (profAuthenticated) {
-        console.log("Here")
-        return <Redirect to="\"></Redirect>
-    }
-    return (
+    return (profAuthenticated ? <Redirect to="\"></Redirect> :
         <Dialog open={props['open']} aria-labelledby="form-dialog-title">
             <form onSubmit={submit}>
                 <DialogTitle id="form-dialog-title">Login</DialogTitle>
@@ -314,4 +301,4 @@ const CreateAccount = (props, { addProf }) => {
             </form>
         </Dialog>);
 }
-export default connect(null, { addProf })(CreateAccount);
+export default CreateAccount;

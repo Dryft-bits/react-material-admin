@@ -3,10 +3,10 @@ import Professor from "../../Professor"
 import Cookies from "js-cookie"
 import {
     NO_PROF,
-    PROF_LOADED
+    PROF_LOADED,
+    LOGOUT_SUCCESS
 } from "../types"
 export const addProf = (prof) => async dispatch => {
-    console.log("gottem");
     if (prof) {
         let res = null;
         try {
@@ -40,6 +40,6 @@ export const logoutProf = () => dispatch => {
     localStorage.setItem('prof', false);
     Cookies.remove("token");
     dispatch({
-        type: NO_PROF
+        type: LOGOUT_SUCCESS
     })
 }

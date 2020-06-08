@@ -11,17 +11,11 @@ import Login from "../pages/login";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useGetData } from "use-axios-react";
-
-import configuration from "../config/constants";
 const Landing = ({ addProf, user }) => {
-    // global
-    //var { isAuthenticated } = store.user;
     let token = Cookies.get("token") ? Cookies.get("token") : null;
     useEffect(() => { addProf(token) }, [addProf, token]);
-    console.log(user);
     const [userInfo, loading] = useGetData("/api/profAuth/profLoggedIn");
     if (loading) {
-        console.log("u");
         return <h2>Loading</h2>
     }
     return (
@@ -54,14 +48,14 @@ const Landing = ({ addProf, user }) => {
                     user ? (
                         React.createElement(Component, props)
                     ) : (
-                            <Redirect
-                                to={{
-                                    pathname: "/login",
-                                    state: {
-                                        from: props.location,
-                                    },
-                                }}
-                            />
+                             <Redirect
+                                    to={{
+                                        pathname: "/login",
+                                        state: {
+                                            from: props.location,
+                                        },
+                                    }}
+                                />
                         )
                 }
             />
@@ -90,7 +84,7 @@ const Landing = ({ addProf, user }) => {
 const mapStateToProps = state => {
     //console.log(state);
     return {
-        user: state.auth.user
+        user: state.auth.user,
     }
 }
 
