@@ -6,6 +6,7 @@ const cookieSession = require("cookie-session");
 const path = require("path");
 const dashboardRoute = require("./server/routes/api/dashboard.js");
 const profAuthRoute = require("./server/routes/api/profAuth.js");
+const courseStatsRoute = require("./server/routes/api/courseStats.js");
 
 const configuration = require("./server/config/constants.js");
 
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV !== "test") {
 /* Define Routes */
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/profAuth", profAuthRoute);
+app.use("/api/courseStats", courseStatsRoute);
 /* Heroku */
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
