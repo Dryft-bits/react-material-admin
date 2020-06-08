@@ -14,8 +14,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { addProf } from "../../redux/actions/auth";
 import CreateAccount from "./CreateAccount";
-import { Route } from 'react-router-dom';
-export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
+export const Landing = ({ isAuthenticated, addProf }) => {
   let token = Cookies.get("token") ? Cookies.get("token") : null;
 
   addProf(token);
@@ -41,9 +40,6 @@ export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
       ...open,
       isCreate: !isCreate
     });
-  };
-  const handleClickOpen = () => {
-    setOpen({ ...open, isOpen: true });
   };
 
   /*
@@ -111,13 +107,9 @@ export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
       });
   };
 
-  if (profAuthenticated) {
-    //redirect to dash here
-    return <Redirect to='/'></Redirect>
-  }
 
   if (isAuthenticated) {
-    return <Redirect to='/checkloggedin'></Redirect>;
+    return <Redirect to='/'></Redirect>;
   }
 
   return (
@@ -135,7 +127,7 @@ export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
           aria-labelledby='form-dialog-title'
         >
           <form onSubmit={submit}>
-            <DialogTitle id='form-dialog-title'>Staff Login</DialogTitle>
+            <DialogTitle id='form-dialog-title'>Admin Login</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Enter your username and password
@@ -186,8 +178,7 @@ export const Landing = ({ isAuthenticated, profAuthenticated, addProf }) => {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.isAuthenticated,
-    profAuthenticated: state.auth.profAuthenticated
+    isAuthenticated: state.auth.isAuthenticated
   };
 };
 

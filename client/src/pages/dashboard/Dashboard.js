@@ -10,7 +10,6 @@ import {
 import { useTheme } from "@material-ui/styles";
 import {
   ResponsiveContainer,
-  ComposedChart,
   AreaChart,
   LineChart,
   Line,

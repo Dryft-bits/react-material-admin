@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import {connect} from 'react-redux'
 import {
   AppBar,
   Toolbar,
@@ -28,15 +27,15 @@ import useStyles from "./styles";
 import { Badge, Typography, Button } from "../Wrappers/Wrappers";
 import Notification from "../Notification/Notification";
 import UserAvatar from "../UserAvatar/UserAvatar";
-
+import Cookies from 'js-cookie';
 // context
 import {
   useLayoutState,
   useLayoutDispatch,
   toggleSidebar,
 } from "../../context/LayoutContext";
-import { useUserDispatch } from "../../context/UserContext";
-import { logoutProf } from "../../redux/actions/auth"
+import configuration from "../../config/constants";
+//import { logoutProf } from "../../redux/actions/auth"
 const messages = [
   {
     id: 0,
@@ -90,13 +89,19 @@ const notifications = [
   },
 ];
 
-const Header = ({logoutProf}) => {
+const Header = () => {
   var classes = useStyles();
+
+  const logoutProf = () => {
+    console.log("bye")
+    localStorage.setItem('prof', false);
+    Cookies.remove("token");
+    window.location.href = configuration.urls.studentLogin;
+  }
 
   // global
   var layoutState = useLayoutState();
   var layoutDispatch = useLayoutDispatch();
-  var userDispatch = useUserDispatch();
 
   // local
   var [mailMenu, setMailMenu] = useState(null);
@@ -329,8 +334,8 @@ const Header = ({logoutProf}) => {
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() =>{ console.log("Clicked"); logoutProf();
-              }}
+              onClick={logoutProf
+              }
             >
               Sign Out
             </Typography>
@@ -341,4 +346,4 @@ const Header = ({logoutProf}) => {
   );
 }
 
-export default connect(null, { logoutProf })(Header);
+export default Header;
