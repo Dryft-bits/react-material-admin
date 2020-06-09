@@ -84,9 +84,9 @@ export const getDataForPeriod = (logins, days = 30) => async dispatch => {
   }
 };
 
-export const resetSemester = () => async dispatch => {
+export const resetSemester = sem => async dispatch => {
   try {
-    await axios.post("/api/dashboard/resetSem").then(res => {
+    await axios.post("/api/dashboard/resetSem", { semester: sem }).then(res => {
       if (res.status === 200) {
         dispatch({
           type: RESET_SUCCESS,

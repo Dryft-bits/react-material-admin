@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-// TODO: Include admin middleware here
 const TimeTable = require("../../models/TimeTable");
 const Login = require("../../models/Login");
 const Student = require("../../models/Student");
-const Hel = require("../../models/Hel");
 
 const mscBranches = ["BIO", "CHEM", "ECO", "MATH", "PHY"];
 
@@ -71,22 +69,23 @@ router.get("/", [], async (req, res) => {
 
 router.post("/resetSem", [], async (req, res) => {
   try {
-    resetStudentCourseStats();
-    // mongoose.connection.db.dropCollection("timetables", function (err, result) {
-    //   console.log("Timetables dropped");
-    // });
-    // mongoose.connection.db.dropCollection("hels-prevsems", function (
-    //   err,
-    //   result
-    // ) {
-    //   console.log("Hels dropped");
-    // });
-    // mongoose.connection.db.dropCollection("course-stats", function (
-    //   err,
-    //   result
-    // ) {
-    //   console.log("Course dropped");
-    // });
+    const sem = req.body.semester;
+    resetStudentCourseStats(sem);
+    mongoose.connection.db.dropCollection("timetables", function (err, result) {
+      console.log("Timetables dropped");
+    });
+    mongoose.connection.db.dropCollection("hels-prevsems", function (
+      err,
+      result
+    ) {
+      console.log("Hels dropped");
+    });
+    mongoose.connection.db.dropCollection("course-stats", function (
+      err,
+      result
+    ) {
+      console.log("Course dropped");
+    });
     res.status(200).json({ msg: "Deleted" });
   } catch (err) {
     console.error(err.message);
@@ -94,12 +93,15 @@ router.post("/resetSem", [], async (req, res) => {
   }
 });
 
-const resetStudentCourseStats = async () => {
+const resetStudentCourseStats = async sem => {
   await Student.updateMany(
-    { name: "Vikramjeet Das" },
+    {},
     { submittedForm: false, interestedCourses: [] },
     { multi: true }
   );
+  if (sem === "odd") {
+    await Student.updateMany({}, { $inc: { year: 1 } }, { multi: true });
+  }
 };
 
 module.exports = router;

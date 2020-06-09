@@ -145,10 +145,10 @@ const Header = ({ resetSemester }) => {
     setOpen(false);
   };
 
-  const resetSem = () => {
+  const resetSem = sem => {
     handleClose();
     setAlertOpen(true);
-    resetSemester();
+    resetSemester(sem);
   };
 
   const handleAlertClose = (event, reason) => {
@@ -423,8 +423,11 @@ const Header = ({ resetSemester }) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={resetSem} color="secondary">
-            Continue
+          <Button onClick={() => resetSem("odd")} color="secondary">
+            Start new odd semester
+          </Button>
+          <Button onClick={() => resetSem("even")} color="secondary">
+            Start new even semester
           </Button>
         </DialogActions>
       </Dialog>
