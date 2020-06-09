@@ -3,6 +3,8 @@ import {
   DASHDATA_FAIL,
   LOGIN_INFO_SUCCESS,
   LOGIN_INFO_FAIL,
+  RESET_SUCCESS,
+  RESET_FAIL,
 } from "../types";
 
 const initialState = {
@@ -37,6 +39,20 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loginData: [],
+      };
+
+    case RESET_SUCCESS:
+      return {
+        ...state,
+        allData: {
+          ...state.allData,
+          timetablesCreated: [],
+        },
+      };
+
+    case RESET_FAIL:
+      return {
+        ...state,
       };
 
     default:

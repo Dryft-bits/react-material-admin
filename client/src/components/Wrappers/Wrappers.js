@@ -75,14 +75,10 @@ function Button({ children, color, className, ...props }) {
     },
     contained: {
       backgroundColor: getColor(color, theme),
-      boxShadow: theme.customShadows.widget,
+      boxShadow: null,
       color: `${color ? "white" : theme.palette.text.primary} !important`,
       "&:hover": {
-        backgroundColor: getColor(color, theme, "light"),
-        boxShadow: theme.customShadows.widgetWide,
-      },
-      "&:active": {
-        boxShadow: theme.customShadows.widgetWide,
+        backgroundColor: getColor(color, theme, "dark"),
       },
     },
     outlined: {
