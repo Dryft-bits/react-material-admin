@@ -6,6 +6,9 @@
   "author": "Dryft-bits",
   "main": "server.js",
   "dependencies": {
+    "@chakra-ui/core": "^0.8.0",
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
@@ -15,6 +18,7 @@
     "cors": "^2.8.5",
     "debug": "^4.1.0",
     "dotenv": "^6.2.0",
+    "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
