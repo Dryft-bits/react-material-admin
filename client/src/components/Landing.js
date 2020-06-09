@@ -16,7 +16,7 @@ const Landing = ({ addProf, user }) => {
   useEffect(() => {
     addProf(token);
   }, [addProf, token]);
-  const [userInfo, loading] = useGetData("/api/profAuth/profLoggedIn");
+  const [, loading] = useGetData("/api/profAuth/profLoggedIn");
   if (loading) {
     return <h2>Loading</h2>;
   }

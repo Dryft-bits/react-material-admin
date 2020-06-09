@@ -145,8 +145,9 @@ const Header = ({ resetSemester }) => {
 
   const resetSem = sem => {
     handleClose();
-    setAlertOpen(true);
-    resetSemester(sem);
+    resetSemester(sem).then(() => {
+      setAlertOpen(true);
+    });
   };
 
   const handleAlertClose = (event, reason) => {

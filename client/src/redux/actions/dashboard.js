@@ -88,8 +88,11 @@ export const resetSemester = sem => async dispatch => {
   try {
     await axios.post("/api/dashboard/resetSem", { semester: sem }).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: RESET_SUCCESS,
+        return new Promise((resolve, reject) => {
+          dispatch({
+            type: RESET_SUCCESS,
+          });
+          resolve();
         });
       } else {
         throw new Error("Could not reset sem");
