@@ -3,7 +3,8 @@ import Search from "../../components/utils/Search";
 import ItemList from "../../components/utils/ItemList";
 import * as TimeTableData from "../../Timetable.json";
 import axios from "axios";
-import { CircularProgress, CircularProgressLabel } from "@chakra-ui/core";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const courses = JSON.parse(JSON.stringify(TimeTableData)).default;
 
@@ -32,7 +33,7 @@ const CourseStats = props => {
       });
     } catch (err) {
       window.alert(
-        "Couldn't Fetch Data at the momnet! Please Try Again Later.",
+        "Couldn't Fetch Data at the moment! Please Try Again Later.",
       );
     }
   };
@@ -56,9 +57,9 @@ const CourseStats = props => {
     <>
       {total ? (
         <div align="left">
-          <CircularProgress value={count} max={total} color="blue" size="25em">
-            <CircularProgressLabel>{count}</CircularProgressLabel>
-          </CircularProgress>
+          <div style={{ width: 200, height: 200 }}>
+            <CircularProgressbar value={count} maxValue={total} text={count} />
+          </div>
           <h3>Interested Students {count}</h3>
           <h3>Total Students {total}</h3>
         </div>
