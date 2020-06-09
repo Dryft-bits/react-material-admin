@@ -5,6 +5,8 @@ import {
   DASHDATA_FAIL,
   LOGIN_INFO_SUCCESS,
   LOGIN_INFO_FAIL,
+  RESET_SUCCESS,
+  RESET_FAIL,
 } from "../types";
 
 // Initial redux action for loading data
@@ -78,6 +80,27 @@ export const getDataForPeriod = (logins, days = 30) => async dispatch => {
     console.log(err);
     dispatch({
       type: LOGIN_INFO_FAIL,
+    });
+  }
+};
+
+export const resetSemester = sem => async dispatch => {
+  try {
+    await axios.post("/api/dashboard/resetSem", { semester: sem }).then(res => {
+      if (res.status === 200) {
+        return new Promise((resolve, reject) => {
+          dispatch({
+            type: RESET_SUCCESS,
+          });
+          resolve();
+        });
+      } else {
+        throw new Error("Could not reset sem");
+      }
+    });
+  } catch (err) {
+    dispatch({
+      type: RESET_FAIL,
     });
   }
 };
