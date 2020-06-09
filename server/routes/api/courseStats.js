@@ -12,7 +12,7 @@ router.get("/:code", [], async (req, res) => {
     let no = 0;
     if (stats) no = stats.count;
     res.status(200).json({
-      count: stats.count,
+      count: no,
       total: total,
     });
   } catch (err) {
