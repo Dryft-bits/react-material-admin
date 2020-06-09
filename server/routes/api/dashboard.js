@@ -33,22 +33,19 @@ router.get("/", [], async (_req, res) => {
     });
 
     let nUniqueLogins = (await Login.find().distinct("userId")).length;
-    let timetablesCreated = await TimeTable.find({}, "date").populate(
-      "ownerId",
-      "-_id branch year"
-    );
+    let timetablesCreated = await TimeTable.find({}, "date");
     timetablesCreated = timetablesCreated.map(function (tt) {
       // null check
       if (tt.ownerId) {
-        let branches = tt.ownerId.branch;
+        let branches = tt.branch;
 
         if (branches.length == 2) {
           if (mscBranches.includes(branches[0])) {
-            tt.ownerId.branch = branches[0];
+            tt.branch = branches[0];
           } else if (mscBranches.includes(branches[1])) {
-            tt.ownerId.branch = branches[1];
+            tt.branch = branches[1];
           } else {
-            tt.ownerId.branch = branches[0];
+            tt.branch = branches[0];
           }
         }
       }
