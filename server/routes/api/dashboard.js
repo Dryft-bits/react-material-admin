@@ -7,7 +7,7 @@ const Student = require("../../models/Student");
 
 const mscBranches = ["BIO", "CHEM", "ECO", "MATH", "PHY"];
 
-router.get("/", [], async (req, res) => {
+router.get("/", [], async (_req, res) => {
   try {
     let nLogins = await Login.countDocuments();
     let userLogins = await Login.find({}, "-__v").populate(
@@ -71,18 +71,21 @@ router.post("/resetSem", [], async (req, res) => {
   try {
     const sem = req.body.semester;
     resetStudentCourseStats(sem);
-    mongoose.connection.db.dropCollection("timetables", function (err, result) {
+    mongoose.connection.db.dropCollection("timetables", function (
+      _err,
+      _result
+    ) {
       console.log("Timetables dropped");
     });
     mongoose.connection.db.dropCollection("hels-prevsems", function (
-      err,
-      result
+      _err,
+      _result
     ) {
       console.log("Hels dropped");
     });
     mongoose.connection.db.dropCollection("course-stats", function (
-      err,
-      result
+      _err,
+      _result
     ) {
       console.log("Course dropped");
     });
