@@ -1,12 +1,14 @@
 import React from "react";
 import Search from "../../components/utils/Search";
 import ItemList from "../../components/utils/ItemList";
+import Select from 'react-select';
 import * as TimeTableData from "../../Timetable.json";
 import axios from "axios";
-import { CircularProgressbar } from "react-circular-progressbar";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-
+console.log(TimeTableData);
 const courses = JSON.parse(JSON.stringify(TimeTableData)).default;
+console.log(courses);
 
 const CourseStats = props => {
   const [courseData, setCourseData] = React.useState({
@@ -18,10 +20,10 @@ const CourseStats = props => {
   const { total, count, initial, current } = courseData;
 
   const stats = e => {
-    e.preventDefault();
-    let et = e.target.innerHTML;
-    let event = et.split(" ");
-    event = event[0] + " " + event[1];
+    if(e===null)
+      return;
+    console.log(e);
+    let event = e.value;
     try {
       axios.get(`/api/courseStats/${event}`).then(res => {
         console.log(res.data);
@@ -37,7 +39,16 @@ const CourseStats = props => {
       );
     }
   };
-
+  function getAtDepth(tt, depth){
+      if (depth == 1) {
+        return Object.keys(tt).map(function(code){
+          return {"value":code , "label":code+" "+tt[code]['name']};
+        });
+      }
+      else return Object.keys(tt).map(function(code){
+        return getAtDepth(tt[code], depth-1);
+      });
+    }
   function filterItems(input) {
     const userInput = input.target.value.toLowerCase();
     let filterCourses = obj =>
@@ -52,28 +63,42 @@ const CourseStats = props => {
     let newCourses = filterCourses(initial);
     setCourseData({ ...courseData, current: newCourses });
   }
-
   return (
     <>
-      {total ? (
-        <div align="left">
-          <div style={{ width: 200, height: 200 }}>
-            <CircularProgressbar value={count} maxValue={total} text={count} />
+        <Select 
+          className="basic-single"
+          classNamePrefix="select"
+          options={getAtDepth(courses,1)}
+          isSearchable
+          isClearable
+          onChange={stats}
+          />
+          <br></br>
+          <br></br>
+          <div 
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center" }}>
+              <div style={{width: "10vw",
+              height: "10vw"}}>
+                <CircularProgressbar
+                value={count}
+                maxValue={total} 
+                text={count}
+                strokeWidth={50}
+                styles={buildStyles({
+                  strokeLinecap: "butt",
+                  textColor: "black",
+                  pathColor: "#1565c0",
+                  trailColor: "#e91e63"
+                })}/>
+                
+              </div>
           </div>
-          <h3>Interested Students {count}</h3>
-          <h3>Total Students {total}</h3>
-        </div>
-      ) : null}{" "}
-      <div style={{ float: "right", width: "35%" }}>
-        <Search action={filterItems} />
-        <ItemList
-          items={current}
-          action={e => {
-            stats(e);
-          }}
-        />
-      </div>
-      ,
+          <br></br>
+          <h3 style={{textAlign:"center"}}>Interested Students {count}</h3>
+          <h3 style={{textAlign:"center"}}>Total Students {total}</h3>
     </>
   );
 };
