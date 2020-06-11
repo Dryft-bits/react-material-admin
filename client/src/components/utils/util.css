@@ -1,0 +1,18 @@
+.courseSearch
+{
+    margin:5px;
+    padding:5px;
+    background-color: rgba(116, 185, 255,1);
+    color: "#353b48";
+    height: 65vh;
+    overflow: auto;
+    text-align:justify;
+}
+
+.courseSearch :hover{
+    cursor: pointer;
+    background-color: #0984e3;
+}
+.input-field ::placeholder{
+    color: black;
+}
