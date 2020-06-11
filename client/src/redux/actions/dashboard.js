@@ -5,6 +5,8 @@ import {
   DASHDATA_FAIL,
   LOGIN_INFO_SUCCESS,
   LOGIN_INFO_FAIL,
+  TT_INFO_SUCCESS,
+  TT_INFO_FAIL,
   RESET_SUCCESS,
   RESET_FAIL,
 } from "../types";
@@ -19,6 +21,7 @@ export const getDashboardData = () => async dispatch => {
           payload: { allData: res.data },
         });
         dispatch(getDataForPeriod(res.data.userLogins, 30));
+        dispatch(getTimetableStats(res.data.timetablesCreated));
       } else {
         throw new Error("Could not fetch data");
       }
@@ -80,6 +83,67 @@ export const getDataForPeriod = (logins, days = 30) => async dispatch => {
     console.log(err);
     dispatch({
       type: LOGIN_INFO_FAIL,
+    });
+  }
+};
+
+export const getTimetableStats = timetables => async dispatch => {
+  const branches = [
+    "BIO",
+    "CHE",
+    "CHEM",
+    "CE",
+    "CS",
+    "ECO",
+    "ECE",
+    "EEE",
+    "INSTR",
+    "MANU",
+    "MATH",
+    "ME",
+    "PHA",
+    "PHY",
+  ];
+  var ttsByBranch = [
+    { name: "BIO", value: 0 },
+    { name: "CHE", value: 0 },
+    { name: "CHEM", value: 0 },
+    { name: "CE", value: 0 },
+    { name: "CS", value: 0 },
+    { name: "ECO", value: 0 },
+    { name: "ECE", value: 0 },
+    { name: "EEE", value: 0 },
+    { name: "INSTR", value: 0 },
+    { name: "MANU", value: 0 },
+    { name: "MATH", value: 0 },
+    { name: "ME", value: 0 },
+    { name: "PHA", value: 0 },
+    { name: "PHY", value: 0 },
+  ];
+
+  var ttsByYear = [
+    { name: "1", value: 0 },
+    { name: "2", value: 0 },
+    { name: "3", value: 0 },
+    { name: "4", value: 0 },
+    { name: "5", value: 0 },
+  ];
+  try {
+    timetables.forEach(function(timetable) {
+      ttsByBranch[branches.indexOf(timetable.branch[0])]["value"] =
+        ttsByBranch[branches.indexOf(timetable.branch[0])]["value"] + 1;
+      ttsByYear[timetable.year - 1]["value"] =
+        ttsByYear[timetable.year - 1]["value"] + 1;
+    });
+
+    dispatch({
+      type: TT_INFO_SUCCESS,
+      payload: { ttBranchData: ttsByBranch, ttYearData: ttsByYear },
+    });
+  } catch (err) {
+    console.log(err);
+    dispatch({
+      type: TT_INFO_FAIL,
     });
   }
 };
