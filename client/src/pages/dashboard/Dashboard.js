@@ -65,7 +65,7 @@ const Dashboard = ({
 
   return (
     <>
-      <PageTitle title="Dashboard" button="Latest Reports" />
+      {/* <PageTitle title="Dashboard" button="Latest Reports" /> */}
       <Grid container spacing={4}>
       <Grid item xs={6}>
           <Widget title="Revenue Breakdown" header={<div className={classes.mainChartHeader}>
@@ -116,7 +116,7 @@ const Dashboard = ({
             </Grid> */}
           </Widget>
         </Grid>
-        <Grid item lg={3} md={8} sm={6} xs={12}>
+        {/* <Grid item lg={3} md={8} sm={6} xs={12}>
           <Widget
             title="Server Overview"
             upperTitle
@@ -193,8 +193,8 @@ const Dashboard = ({
               </div>
             </div>
           </Widget>
-        </Grid>
-        <Grid item lg={3} md={4} sm={6} xs={12}>
+        </Grid> */}
+        {/* <Grid item lg={3} md={4} sm={6} xs={12}>
           <Widget title="Revenue Breakdown" upperTitle className={classes.card}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -233,7 +233,7 @@ const Dashboard = ({
               </Grid>
             </Grid>
           </Widget>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Widget
             bodyClass={classes.mainChartBody}
@@ -331,12 +331,12 @@ const Dashboard = ({
             </ResponsiveContainer>
           </Widget>
         </Grid>
-        {mock.bigStat.map(stat => (
+        {/* {mock.bigStat.map(stat => (
           <Grid item md={4} sm={6} xs={12} key={stat.product}>
             <BigStat {...stat} />
           </Grid>
-        ))}
-        <Grid item xs={12}>
+        ))} */}
+        {/* <Grid item xs={12}>
           <Widget
             title="Support Requests"
             upperTitle
@@ -345,7 +345,7 @@ const Dashboard = ({
           >
             <Table data={mock.table} />
           </Widget>
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

@@ -198,7 +198,7 @@ const Header = ({ resetSemester }) => {
           >
             Start a new Semester
           </Button>
-          <div
+          {/* <div
             className={classNames(classes.search, {
               [classes.searchFocused]: isSearchOpen,
             })}
@@ -218,8 +218,8 @@ const Header = ({ resetSemester }) => {
                 input: classes.inputInput,
               }}
             />
-          </div>
-          <IconButton
+          </div> */}
+          {/* <IconButton
             color="inherit"
             aria-haspopup="true"
             aria-controls="mail-menu"
@@ -235,8 +235,8 @@ const Header = ({ resetSemester }) => {
             >
               <NotificationsIcon classes={{ root: classes.headerIcon }} />
             </Badge>
-          </IconButton>
-          <IconButton
+          </IconButton> */}
+          {/* <IconButton
             color="inherit"
             aria-haspopup="true"
             aria-controls="mail-menu"
@@ -252,7 +252,7 @@ const Header = ({ resetSemester }) => {
             >
               <MailIcon classes={{ root: classes.headerIcon }} />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           <IconButton
             aria-haspopup="true"
             color="inherit"
@@ -351,7 +351,7 @@ const Header = ({ resetSemester }) => {
             classes={{ paper: classes.profileMenu }}
             disableAutoFocusItem
           >
-            <div className={classes.profileMenuUser}>
+            {/* <div className={classes.profileMenuUser}>
               <Typography variant="h4" weight="medium">
                 John Smith
               </Typography>
@@ -363,31 +363,31 @@ const Header = ({ resetSemester }) => {
               >
                 Flalogic.com
               </Typography>
-            </div>
-            <MenuItem
+            </div> */}
+            {/* <MenuItem
               className={classNames(
                 classes.profileMenuItem,
                 classes.headerMenuItem,
               )}
             >
               <AccountIcon className={classes.profileMenuIcon} /> Profile
-            </MenuItem>
-            <MenuItem
+            </MenuItem> */}
+            {/* <MenuItem
               className={classNames(
                 classes.profileMenuItem,
                 classes.headerMenuItem,
               )}
             >
               <AccountIcon className={classes.profileMenuIcon} /> Tasks
-            </MenuItem>
-            <MenuItem
+            </MenuItem> */}
+            {/* <MenuItem
               className={classNames(
                 classes.profileMenuItem,
                 classes.headerMenuItem,
               )}
             >
               <AccountIcon className={classes.profileMenuIcon} /> Messages
-            </MenuItem>
+            </MenuItem> */}
             <div className={classes.profileMenuUser}>
               <Typography
                 className={classes.profileMenuLink}
