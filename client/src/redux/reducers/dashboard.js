@@ -47,8 +47,8 @@ export default function(state = initialState, action) {
     case TT_INFO_FAIL:
       return {
         ...state,
-        ttBranchData: null,
-        ttYearData: null,
+        ttBranchData: [],
+        ttYearData: [],
       };
 
     case LOGIN_INFO_FAIL:
