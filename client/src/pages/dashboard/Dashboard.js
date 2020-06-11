@@ -7,7 +7,8 @@ import {
   OutlinedInput,
   MenuItem,
 } from "@material-ui/core";
-import CourseStats from '../course-stats/CourseStats';
+import CourseStats from "../course-stats/CourseStats";
+import TimetableStats from "./components/TimetableStats";
 import { useTheme } from "@material-ui/styles";
 import {
   ResponsiveContainer,
@@ -67,8 +68,11 @@ const Dashboard = ({
     <>
       {/* <PageTitle title="Dashboard" button="Latest Reports" /> */}
       <Grid container spacing={4}>
-      <Grid item xs={6}>
-          <Widget title="Revenue Breakdown" header={<div className={classes.mainChartHeader}>
+        <Grid item xs={6}>
+          <Widget
+            title="Revenue Breakdown"
+            header={
+              <div className={classes.mainChartHeader}>
                 <Typography
                   variant="h5"
                   color="text"
@@ -76,8 +80,12 @@ const Dashboard = ({
                 >
                   Course Stats
                 </Typography>
-                </div>} upperTitle className={classes.card}>
-                  <CourseStats/>
+              </div>
+            }
+            upperTitle
+            className={classes.card}
+          >
+            <CourseStats />
             {/* <Grid container spacing={2}>
               <Grid item xs={6}>
                 <ResponsiveContainer width="100%" height={144}>
@@ -114,6 +122,26 @@ const Dashboard = ({
                 </div>
               </Grid>
             </Grid> */}
+          </Widget>
+        </Grid>
+        <Grid item xs={6}>
+          <Widget
+            title="Revenue Breakdown"
+            header={
+              <div className={classes.mainChartHeader}>
+                <Typography
+                  variant="h5"
+                  color="text"
+                  colorBrightness="secondary"
+                >
+                  Timetable Stats
+                </Typography>
+              </div>
+            }
+            upperTitle
+            className={classes.card}
+          >
+            <TimetableStats />
           </Widget>
         </Grid>
         {/* <Grid item lg={3} md={8} sm={6} xs={12}>

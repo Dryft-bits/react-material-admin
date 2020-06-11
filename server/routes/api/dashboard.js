@@ -33,7 +33,7 @@ router.get("/", [], async (_req, res) => {
     });
 
     let nUniqueLogins = (await Login.find().distinct("userId")).length;
-    let timetablesCreated = await TimeTable.find({}, "date");
+    let timetablesCreated = await TimeTable.find({}, "date branch year");
     timetablesCreated = timetablesCreated.map(function (tt) {
       // null check
       if (tt.ownerId) {

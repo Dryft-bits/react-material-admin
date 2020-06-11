@@ -3,6 +3,8 @@ import {
   DASHDATA_FAIL,
   LOGIN_INFO_SUCCESS,
   LOGIN_INFO_FAIL,
+  TT_INFO_SUCCESS,
+  TT_INFO_FAIL,
   RESET_SUCCESS,
   RESET_FAIL,
 } from "../types";
@@ -35,6 +37,20 @@ export default function(state = initialState, action) {
         loginData: [],
       };
 
+    case TT_INFO_SUCCESS:
+      return {
+        ...state,
+        ttBranchData: payload.ttBranchData,
+        ttYearData: payload.ttYearData,
+      };
+
+    case TT_INFO_FAIL:
+      return {
+        ...state,
+        ttBranchData: null,
+        ttYearData: null,
+      };
+
     case LOGIN_INFO_FAIL:
       return {
         ...state,
@@ -48,6 +64,8 @@ export default function(state = initialState, action) {
           ...state.allData,
           timetablesCreated: [],
         },
+        ttBranchData: [],
+        ttYearData: [],
       };
 
     case RESET_FAIL:
