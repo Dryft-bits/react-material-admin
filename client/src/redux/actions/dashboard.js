@@ -148,9 +148,9 @@ export const getTimetableStats = timetables => async dispatch => {
   }
 };
 
-export const resetSemester = sem => async dispatch => {
+export const resetSemester = (sem,token) => async dispatch => {
   try {
-    await axios.post("/api/dashboard/resetSem", { semester: sem }).then(res => {
+    await axios.post("/api/dashboard/resetSem", { semester: sem, token:token }).then(res => {
       if (res.status === 200) {
         return new Promise((resolve, reject) => {
           dispatch({

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Grid,
-  LinearProgress,
+  //LinearProgress,
   Select,
   OutlinedInput,
   MenuItem,
@@ -13,12 +13,12 @@ import { useTheme } from "@material-ui/styles";
 import {
   ResponsiveContainer,
   AreaChart,
-  LineChart,
-  Line,
+  //LineChart,
+  //Line,
   Area,
-  PieChart,
-  Pie,
-  Cell,
+  //PieChart,
+  //Pie,
+  //Cell,
   YAxis,
   XAxis,
 } from "recharts";
@@ -27,13 +27,13 @@ import {
 import useStyles from "./styles";
 
 // components
-import mock from "./mock";
+//import mock from "./mock";
 import Widget from "../../components/Widget";
-import PageTitle from "../../components/PageTitle";
+//import PageTitle from "../../components/PageTitle";
 import { Typography } from "../../components/Wrappers";
 import Dot from "../../components/Sidebar/components/Dot";
-import Table from "./components/Table/Table";
-import BigStat from "./components/BigStat/BigStat";
+//import Table from "./components/Table/Table";
+//import BigStat from "./components/BigStat/BigStat";
 
 import {
   getDashboardData,
@@ -41,12 +41,12 @@ import {
 } from "../../redux/actions/dashboard";
 
 // const mainChartData = getMainChartData();
-const PieChartData = [
+/*const PieChartData = [
   { name: "Group A", value: 400, color: "primary" },
   { name: "Group B", value: 300, color: "secondary" },
   { name: "Group C", value: 300, color: "warning" },
   { name: "Group D", value: 200, color: "success" },
-];
+];*/
 
 const Dashboard = ({
   y_max,
@@ -380,6 +380,7 @@ const Dashboard = ({
 };
 
 // #######################################################################
+/*
 function getRandomData(length, min, max, multiplier = 10, maxDiff = 10) {
   var array = new Array(length).fill();
   let lastValue;
@@ -400,7 +401,7 @@ function getRandomData(length, min, max, multiplier = 10, maxDiff = 10) {
     return { value: randomValue };
   });
 }
-
+*/
 const mapStateToProps = state => {
   return {
     allData: state.dashboard.allData,

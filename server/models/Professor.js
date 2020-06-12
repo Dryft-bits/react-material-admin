@@ -10,6 +10,10 @@ const Professor = new Schema({
     required: true,
     unique: true
   },
+  isAdmin: {
+    type: Boolean,
+    required: true
+  },
   hash: {
       type: String, 
       required: true

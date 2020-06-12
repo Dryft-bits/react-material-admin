@@ -23,7 +23,7 @@ export const addProf = (prof) => async dispatch => {
                 localStorage.setItem('prof', true);
                 dispatch({
                     type: PROF_LOADED,
-                    payload: new Professor(res.data.username, res.data.name, res.data.department, res.data.email)
+                    payload: new Professor(res.data.username, res.data.name, res.data.department, res.data.email, res.data.isAdmin)
                 })
             }
         }

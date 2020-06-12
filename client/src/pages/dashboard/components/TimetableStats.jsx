@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Grid,
-  LinearProgress,
-  Select,
-  OutlinedInput,
-  MenuItem,
+  //LinearProgress,
+  //Select,
+  //OutlinedInput,
+  //MenuItem,
 } from "@material-ui/core";
 
 import { useTheme } from "@material-ui/styles";
 import {
   ResponsiveContainer,
-  AreaChart,
-  LineChart,
-  Line,
-  Area,
+  //AreaChart,
+  //LineChart,
+  //Line,
+  //Area,
   PieChart,
   Pie,
   Cell,
-  YAxis,
-  XAxis,
+  //YAxis,
+  //XAxis,
 } from "recharts";
 
 // styles
