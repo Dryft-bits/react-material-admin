@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { connect } from "react-redux";
-
+import Cookies from 'js-cookie';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -13,7 +13,7 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase,
+  //InputBase,
   Menu,
   MenuItem,
   Fab,
@@ -21,10 +21,10 @@ import {
 } from "@material-ui/core";
 import {
   Menu as MenuIcon,
-  MailOutline as MailIcon,
-  NotificationsNone as NotificationsIcon,
+ // MailOutline as MailIcon,
+ // NotificationsNone as NotificationsIcon,
   Person as AccountIcon,
-  Search as SearchIcon,
+ // Search as SearchIcon,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
@@ -34,10 +34,10 @@ import classNames from "classnames";
 import useStyles from "./styles";
 
 // components
-import { Badge, Typography, Button } from "../Wrappers/Wrappers";
+import { /*Badge,*/ Typography, Button } from "../Wrappers/Wrappers";
 import Notification from "../Notification/Notification";
 import UserAvatar from "../UserAvatar/UserAvatar";
-import Cookies from "js-cookie";
+
 // context
 import {
   useLayoutState,
@@ -47,6 +47,7 @@ import {
 import configuration from "../../config/constants";
 
 import { resetSemester } from "../../redux/actions/dashboard";
+//import { STATES } from "mongoose";
 
 //import { logoutProf } from "../../redux/actions/auth"
 
@@ -111,7 +112,7 @@ const notifications = [
   },
 ];
 
-const Header = ({ resetSemester }) => {
+const Header = ({user, resetSemester}) => {
   var classes = useStyles();
 
   const logoutProf = () => {
@@ -127,11 +128,11 @@ const Header = ({ resetSemester }) => {
 
   // local
   var [mailMenu, setMailMenu] = useState(null);
-  var [isMailsUnread, setIsMailsUnread] = useState(true);
+  //var [isMailsUnread, setIsMailsUnread] = useState(true);
   var [notificationsMenu, setNotificationsMenu] = useState(null);
-  var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
+  //var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   var [profileMenu, setProfileMenu] = useState(null);
-  var [isSearchOpen, setSearchOpen] = useState(false);
+  //var [isSearchOpen, setSearchOpen] = useState(false);
   var [open, setOpen] = React.useState(false);
   var [alertOpen, setAlertOpen] = React.useState(false);
 
@@ -145,7 +146,8 @@ const Header = ({ resetSemester }) => {
 
   const resetSem = sem => {
     handleClose();
-    resetSemester(sem).then(() => {
+    let token = Cookies.get("token") ? Cookies.get("token") : null;
+    resetSemester(sem,token).then(() => {
       setAlertOpen(true);
     });
   };
@@ -194,7 +196,7 @@ const Header = ({ resetSemester }) => {
             onClick={handleClickOpen}
             variant={"contained"}
             color={"secondary"}
-            style={{ marginRight: 24 }}
+            style={{ marginRight: 24, display: user.isAdmin?"inline":"none" }}
           >
             Start a new Semester
           </Button>
@@ -446,4 +448,8 @@ const Header = ({ resetSemester }) => {
   );
 };
 
-export default connect(null, { resetSemester })(Header);
+const mapStateToProps = (state) =>{
+  return {user: state.auth.user}
+}
+
+export default connect(mapStateToProps, {resetSemester})(Header);

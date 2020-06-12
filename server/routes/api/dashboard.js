@@ -4,9 +4,9 @@ const router = express.Router();
 const TimeTable = require("../../models/TimeTable");
 const Login = require("../../models/Login");
 const Student = require("../../models/Student");
-
+const { check, validationResult } = require("express-validator");
 const mscBranches = ["BIO", "CHEM", "ECO", "MATH", "PHY"];
-
+const jwt = require('jsonwebtoken');
 router.get("/", [], async (_req, res) => {
   try {
     let nLogins = await Login.countDocuments();
@@ -64,33 +64,49 @@ router.get("/", [], async (_req, res) => {
   }
 });
 
-router.post("/resetSem", [], async (req, res) => {
-  try {
-    const sem = req.body.semester;
-    resetStudentCourseStats(sem);
-    mongoose.connection.db.dropCollection("timetables", function (
-      _err,
-      _result
-    ) {
-      console.log("Timetables dropped");
-    });
-    mongoose.connection.db.dropCollection("hels-prevsems", function (
-      _err,
-      _result
-    ) {
-      console.log("Hels dropped");
-    });
-    mongoose.connection.db.dropCollection("course-stats", function (
-      _err,
-      _result
-    ) {
-      console.log("Course dropped");
-    });
-    res.status(200).json({ msg: "Deleted" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+router.post("/resetSem", [check('token', "token is required").not().isEmpty(),], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(412).json({ errors: errors.array() }); //412: precondition failed
   }
+  const token = req.body.token;
+  jwt.verify(token, process.env.SECRET_KEY_BCRYPT, (err, data) => {
+    if (err) {
+      return res.json(null);
+    }
+    else if (data.isAdmin == true) {
+        try {
+          const sem = req.body.semester;
+          resetStudentCourseStats(sem);
+          mongoose.connection.db.dropCollection("timetables", function (
+            _err,
+            _result
+          ) {
+            console.log("Timetables dropped");
+          });
+          mongoose.connection.db.dropCollection("hels-prevsems", function (
+            _err,
+            _result
+          ) {
+            console.log("Hels dropped");
+          });
+          mongoose.connection.db.dropCollection("course-stats", function (
+            _err,
+            _result
+          ) {
+            console.log("Course dropped");
+          });
+          res.status(200).json({ msg: "Deleted" });
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send("Server error");
+        }
+      }
+    else
+    {
+      res.status(403).send("Not authorized");
+    }
+    })
 });
 
 const resetStudentCourseStats = async sem => {

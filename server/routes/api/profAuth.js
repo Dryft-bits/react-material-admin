@@ -27,7 +27,8 @@ router.post("/", [
                     username: prof.username,
                     name: prof.name,
                     department: prof.department,
-                    email: prof.email
+                    email: prof.email,
+                    isAdmin: prof.isAdmin
                 }, process.env.SECRET_KEY_BCRYPT, { expiresIn: expiresIn });
                 return res.json({
                     headers: { 'Access-Control-Allow-Origin': "*" },
@@ -43,6 +44,7 @@ router.post("/", [
             res.status(500).send("Server Error" + err);
         }
     });
+
 router.post("/profLoggedIn", [
     check('token',"token is required").not().isEmpty(),
 ], async (req, res) => {
@@ -61,7 +63,8 @@ router.post("/profLoggedIn", [
                     name: data.name,
                     username: data.username,
                     department: data.department,
-                    email: data.email
+                    email: data.email,
+                    isAdmin: data.isAdmin,
                 })
         }
 
@@ -101,7 +104,8 @@ router.post("/createAcc", [
                     hash: hash,
                     email: email,
                     name: name,
-                    department: department
+                    department: department,
+                    isAdmin: false
                 });
                 prof.save();
                 return res.status(200).send({
@@ -109,7 +113,8 @@ router.post("/createAcc", [
                     password: hash,
                     email: email,
                     name: name,
-                    department: department
+                    department: department,
+                    isAdmin: false
                 });
             }
         });
