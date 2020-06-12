@@ -185,6 +185,7 @@ const CreateAccount = (props) => {
                                 //store the token in HTTP cookie
                                 Cookies.set("token", res.data.token, { expires: 1 });
                                 pa = true;
+                                handleClose();
                             })
                             .catch(err => {
                                 console.log("Axios Error:", err);
@@ -211,7 +212,7 @@ const CreateAccount = (props) => {
             })
         }
     }
-    return (profAuthenticated ? <Redirect to="\"></Redirect> :
+    return (
         <Dialog open={props['open']} aria-labelledby="form-dialog-title">
             <form onSubmit={submit}>
                 <DialogTitle id="form-dialog-title">Login</DialogTitle>
